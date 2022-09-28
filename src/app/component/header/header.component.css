@@ -1,0 +1,11 @@
+.bi-cart4,
+.bi-bookmark-star,
+.bi-key {
+  color: white;
+  font-size: 30px;
+  padding: 5px;
+}
+.nav-link {
+  color: white;
+  margin-left: 10px;
+}

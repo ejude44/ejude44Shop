@@ -1,0 +1,57 @@
+<!-- <div class="row">
+  <div class="col-xs-12"> -->
+
+<!-- <div class="p-5 container mt-3">
+      <div class="card" style="width: 200px" *ngFor="let p of products">
+        <img
+          class="card-img-top"
+          src="{{ p.imageUrl }}"
+          alt="Card image"
+          style="width: 100%"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ p.name }}</h5>
+          <p class="card-text">price:{{ p.price }}</p>
+          <a href="#" class="btn btn-primary">to Cart</a> |
+          <i class="bi bi-bookmark-check-fill"></i>
+        </div>
+      </div>
+    </div> -->
+<!-- /////////////////////////////////////// -->
+
+<div class="main-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- loop over the collection of products -->
+        <div *ngFor="let tempProduct of products" class="col-md-3">
+          <div class="card border-0" style="width: 150px">
+            <a routerLink="/products/{{ tempProduct.id }}">
+              <img src="{{ tempProduct.imageUrl }}" class="img-responsive" />
+            </a>
+            <div class="card-body">
+              <a routerLink="/products/{{ tempProduct.id }}">
+                <h5 class="card-title">{{ tempProduct.name }}</h5>
+              </a>
+
+              <div class="price">
+                {{ tempProduct.price | currency: "EUR" }}
+              </div>
+              <button class="btn btn-primary btn-sm">to cart</button> |
+              <i class="bi bi-bookmark-check-fill"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- if products empty then display a message -->
+        <div
+          *ngIf="products?.length == 0"
+          class="alert alert-warning col-md-12"
+          role="alert"
+        >
+          No products found.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
