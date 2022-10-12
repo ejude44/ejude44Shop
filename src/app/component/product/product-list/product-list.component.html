@@ -24,7 +24,7 @@
     <div class="container-fluid">
       <div class="row">
         <!-- loop over the collection of products -->
-        <div *ngFor="let tempProduct of products" class="col-md-3">
+        <div *ngFor="let tempProduct of (products$|async)" class="col-md-3">
           <div class="card border-0" style="width: 150px">
             <a routerLink="/products/{{ tempProduct.id }}">
               <img src="{{ tempProduct.imageUrl }}" class="img-responsive" />
@@ -38,19 +38,21 @@
                 {{ tempProduct.price | currency: "EUR" }}
               </div>
               <button class="btn btn-primary btn-sm">to cart</button> |
-              <i class="bi bi-bookmark-check-fill"></i>
+              <button type="button" (click)="onAddfavorite(tempProduct)">
+                <i class="bi bi-bookmark-check" ></i>
+              </button>
             </div>
           </div>
         </div>
 
         <!-- if products empty then display a message -->
-        <div
+        <!-- <div
           *ngIf="products?.length == 0"
           class="alert alert-warning col-md-12"
           role="alert"
         >
           No products found.
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

@@ -1,43 +1,59 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { state } from '@angular/animations';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { async, Observable } from 'rxjs';
+import * as ProductActions from 'src/app/actions/product.actions';
+import { AppState, selectProduct } from 'src/app/reducers';
+
 import { Product } from 'src/common/product.model';
+
 import { ProductService } from '../product.service';
-import { map } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { State } from '../../../../common/state.model';
-import { productReducer } from '../store/product.reducer';
-import * as fromApp from './../../../store/app.reducer';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 })
-export class ProductListComponent implements OnInit, OnDestroy {
-  products: Product[] = [];
+export class ProductListComponent implements OnInit {
+  products: Product[]
+
+  products$: Observable<Product[]>;
+  addedToFavorites: boolean = false;
 
   currentCategoryId: number;
-  subscription: Subscription;
-
   constructor(
     private productService: ProductService,
-    private route: ActivatedRoute,
-    private store: Store<fromApp.AppState>
-  ) {}
 
-  ngOnInit(): void {
-    this.subscription = this.store
-      .select('products')
-      .pipe(map((productState) => productState.products))
-      .subscribe((product: Product[]) => {
-        this.products = product;
-        console.log(this.products);
-      });
+    private route: ActivatedRoute,
+    private store: Store<AppState>
+  ) {
+    
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  ngOnInit() {
+    this.products$ = this.store.pipe(select(selectProduct));
+    this.store.dispatch(new ProductActions.LoadProducts());
+
+    
+    this.route.paramMap.subscribe(() => {
+      this.listProducts();
+    });
+  }
+  onAddfavorite(product: Product){
+    this.store.dispatch(new ProductActions.SetFavorites(product))
+    this.addedToFavorites = true
+
+  }
+  onRemovefavorite(){
+    this.addedToFavorites= false
   }
 
   listProducts() {
@@ -45,16 +61,16 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
     if (hasCategoryId) {
       this.currentCategoryId = +this.route.snapshot.paramMap.get('id');
+      this.productService
+        .getProductsCat(this.currentCategoryId)
+        .subscribe((data) => {
+          this.products = data;
+      }
+      );
     } else {
-      this.productService.getProducts().subscribe((data) => {
-        this.products = data;
-      });
+      // this.productService.getProducts().subscribe((data) => {
+      //   this.products = data;
+      // });
     }
-
-    this.productService
-      .getProductsCat(this.currentCategoryId)
-      .subscribe((data) => {
-        this.products = data;
-      });
   }
 }

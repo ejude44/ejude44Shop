@@ -29,6 +29,7 @@ export class ProductService {
       .get<GetResponse>(searchUrl)
       .pipe(map((response) => response._embedded.products));
   }
+
   //confiure url based on categoryid TODO
 
   //   getProduct(id: number) {

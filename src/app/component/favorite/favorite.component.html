@@ -1,1 +1,9 @@
-<p>favorite works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-12-xs">
+            <div *ngFor="let product of products">
+                {{product.name}}
+            </div>
+        </div>
+    </div>
+</div>
